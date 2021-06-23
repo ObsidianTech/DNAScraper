@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'HomePage',
+  name: 'Home',
   data() {
     const searchInput = "";
     return {
