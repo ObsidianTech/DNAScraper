@@ -8,6 +8,7 @@
     <button @click="sendToSearch" class="submit">Search</button>
 
     <h2 class="tableName">Locations</h2>
+    <h5>Total: {{ locations.length }}</h5>
     <b-table 
       :data="locations" 
       :columns="columns"
