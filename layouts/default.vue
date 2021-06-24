@@ -1,12 +1,19 @@
 <template>
-  <div class="container column is-10">
+  <div class="dna-app">
     <nuxt />
   </div>
 </template>
 
 <script>
 export default {
-  // data () {
-  // },
+  mounted() {
+    this.$store.dispatch('getLocations');
+  },
 };
 </script>
+
+<style>
+.dna-app {
+  width: 100%;
+}
+</style>

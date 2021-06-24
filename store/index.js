@@ -1,19 +1,33 @@
 import config from '../config.js';
 
 export const state = () => ({
-    scrappedLocations: [],
+    scrapedLocations: [],
+    searchError: false,
 });
 
 export const mutations = {
-
+    setLocations(state, payload) {
+        state.scrapedLocations = payload;
+    },
+    searchError(state) {
+        state.searchError = true;
+    }
 };
 
 export const actions = {
-    async search(commit, payload) {         
-        const reformattedString = payload.replace(/\s+/g, '+');
-        const searchString = `paternity+testing+service+${reformattedString}`;
-        const test = await this.$axios
-            .get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${searchString}&key=${config.API_KEY}`);
-        console.log(test);
+    async search({commit, dispatch}, payload) { 
+        const reformattedString = payload.replace(/\s+/g, '+').toLowerCase(); 
+        const reformattedString2 = reformattedString.replace(/,/g, '+');
+        try {
+            await this.$axios.get(config.API + 'search/' + reformattedString2);
+            dispatch('getLocations');
+        } catch(e) {
+            commit('searchError');
+        }
+    },
+
+    async getLocations({commit}) {
+        const locations = await this.$axios.get(config.API + 'locations');
+        commit('setLocations', locations.data.reverse());
     },
 };
