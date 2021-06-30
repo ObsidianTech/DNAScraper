@@ -9,24 +9,16 @@
     <h3 class="instructions">
       Search through the list of existing records here.
     </h3>
-    <input v-model="filterInput" type="text" class="searchBar">
+    <input 
+      v-model="filterInput" 
+      type="text" 
+      class="searchBar"
+    >
     <h2 class="tableName">Locations</h2>
     <h5>Total: {{ locations.length }}</h5>
     <div class="tableWrapper">
       <b-table 
-        v-if="filterInput"
-        :data="filteredList" 
-        :columns="columns"
-        :bordered="false"
-        :striped="true"
-        :narrowed="true"
-        :hoverable="true"
-        :loading="!isLoading"
-      >
-      </b-table>
-      <b-table 
-        v-else
-        :data="locations" 
+        :data="locations"
         :columns="columns"
         :bordered="false"
         :striped="true"
@@ -45,7 +37,6 @@ export default {
   data() {
     const searchInput = "";
     const filterInput = "";
-    const filteredList = [];
     const columns = [
       {
         field: 'businessName',
@@ -72,32 +63,33 @@ export default {
     return {
       searchInput,
       filterInput,
-      filteredList,
       columns,
     };
   },
   computed: {
-    locations() {
+    scrapedLocations() {
       return this.$store.state.scrapedLocations;
     },
     isLoading() {
-      return this.locations.length > 0;
+      return this.scrapedLocations.length > 0;
+    },
+    locations() {
+      if(this.filterInput) {
+        var filter = []; 
+        this.scrapedLocations.forEach(s => {
+          if(s.businessName.toLowerCase().includes(this.filterInput.toLowerCase()) ||
+            s.address.toLowerCase().includes(this.filterInput.toLowerCase())) {
+              filter.push(s);
+            }
+        });
+        return filter;
+      }
+      return this.scrapedLocations;
     },
   },
   methods: {
     sendToSearch() {
       this.$store.dispatch('search', this.searchInput);
-    },
-  },
-  watch: {
-    filterInput(newVal) {
-      const filtered = [];
-      this.locations.map(l => {
-        if(l.businessName.includes(newVal) || l.address.includes(newVal)) {
-          filtered.push(l);
-        }
-      });
-      this.filterInput = filtered;
     },
   },
 };
