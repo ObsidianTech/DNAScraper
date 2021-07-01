@@ -19,7 +19,7 @@ export const actions = {
         const reformattedString = payload.replace(/\s+/g, '+').toLowerCase(); 
         const reformattedString2 = reformattedString.replace(/,/g, '+');
         try {
-            await this.$axios.get(config.API + 'search/' + reformattedString2);
+            await this.$axios.get(config.API + 'search/dna' + reformattedString2);
             dispatch('getLocations');
         } catch(e) {
             commit('searchError');
@@ -27,7 +27,7 @@ export const actions = {
     },
 
     async getLocations({commit}) {
-        const locations = await this.$axios.get(config.API + 'locations');
+        const locations = await this.$axios.get(config.API + 'locations/dna');
         commit('setLocations', locations.data.reverse());
     },
 };
